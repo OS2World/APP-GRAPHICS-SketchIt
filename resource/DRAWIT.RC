@@ -1,0 +1,1580 @@
+#ifndef WORKSHOP_INVOKED
+#include <os2.h>
+#endif
+#include "..\\port\\dlg.h"
+#include "..\\port\\dlg_btn.h"
+#include "..\\port\\resource.h"
+
+#define IDB_MONALISA 1340
+#define IDB_LOGO     1341
+
+ICON ICO_PRINTPREV  "..\\resource\\prtprev.ico"
+/* --- Graphic Buttons Bitmaps ----------------------------------------	*/
+
+BITMAP IDB_DEFAULT         "..\\resource\\Default.Bmp"
+BITMAP IDB_DEFAULTDISABLED "..\\resource\\Disabled.bmp"
+BITMAP IDB_DEFAULTDOWN	    "..\\resource\\Disabled.bmp"
+BITMAP IDB_CIRCLE          "..\\resource\\Circle.bmp"
+BITMAP IDB_SQUARE          "..\\resource\\Square.bmp"
+BITMAP IDB_TEXT            "..\\resource\\Text.bmp"
+BITMAP IDB_FCHANGE         "..\\resource\\splhit.bmp"     /* reformatting btn */
+BITMAP IDB_SELECT          "..\\resource\\select.bmp"     /* select bitmap    */
+BITMAP IDB_FILL            "..\\resource\\fill.bmp"       /* filling          */
+BITMAP IDB_LINE            "..\\resource\\line.bmp"       /* lines bitmap     */
+BITMAP IDB_FLINE           "..\\resource\\pspline.bmp"    /* The polyspline   */
+BITMAP IDB_TRIANGLE        "..\\resource\\trian.bmp"      /* triangles        */
+BITMAP IDB_SPLINE          "..\\resource\\spline.bmp"     /* polyline         */
+BITMAP IDB_LAYER           "..\\resource\\layer.bmp"      /* set active layer */
+BITMAP IDB_FONT            "..\\resource\\font.bmp"       /* FontPallette     */
+BITMAP IDB_CHGOBJ          "..\\resource\\objch.bmp"      /* Change obj..bla  */
+BITMAP IDB_ZOOM            "..\\resource\\zoom.bmp"
+BITMAP IDB_ROTATE          "..\\resource\\rotate.bmp"
+BITMAP IDB_MONALISA        "..\\resource\\drlogo.bmp"     /* Splash bmp       */
+BITMAP IDB_LOGO            "..\\resource\\logo.bmp"
+/* --- Graphic Buttons Bitmaps ---FOR THE DISABLED OR PRESSED STATE-----*/
+//BITMAP IDB_PCIRCLE         "..\\resource\\PCircle.bmp"
+//BITMAP IDB_PSQUARE         "..\\resource\\PSquare.bmp"
+//BITMAP IDB_PTEXT           "..\\resource\\PText.bmp"
+//BITMAP IDB_PSELECT         "..\\resource\\pselect.bmp"     /* select bitmap    */
+//BITMAP IDB_PLINE           "..\\resource\\pline.bmp"       /* lines bitmap     */
+//BITMAP IDB_PFLINE          "..\\resource\\ppspline.bmp"    /* The polyspline   */
+//BITMAP IDB_PTRIANGLE       "..\\resource\\ptrian.bmp"      /* triangles        */
+//BITMAP IDB_PSPLINE         "..\\resource\\splinep.bmp"     /* polyline         */
+/*
+** Sub Toolbar buttons for circular shapes
+*/
+BITMAP IDB_CLTOP   "..\\resource\\cltop.bmp"
+BITMAP IDB_CLBOT   "..\\resource\\clbot.bmp"
+BITMAP IDB_CRTOP   "..\\resource\\crtop.bmp"
+BITMAP IDB_CRBOT   "..\\resource\\crbot.bmp"
+BITMAP IDB_CLFTOP  "..\\resource\\clftop.bmp"
+BITMAP IDB_CLFBOT  "..\\resource\\clfbot.bmp"
+BITMAP IDB_CRFTOP  "..\\resource\\crftop.bmp"
+BITMAP IDB_CRFBOT  "..\\resource\\crfbot.bmp"
+/*
+** Sub Toolbar button for block text.
+*/
+BITMAP IDB_BLCKTEXT "..\\resource\\blocktxt.bmp"
+
+/* --- Alignment menu options -------------------------------------------*/
+
+BITMAP  IDB_ALIGNHORZ       "..\\resource\\alnhorz.bmp" /* horz aligment */
+BITMAP  IDB_ALNHORZT        "..\\resource\\alnhorzt.bmp"
+BITMAP  IDB_ALNHORZB        "..\\resource\\alnhorzb.bmp"
+BITMAP  IDB_ALIGNVERT       "..\\resource\\alnvert.bmp" /* vert aligment */
+BITMAP  IDB_ALNVERTL        "..\\resource\\alnvertl.bmp"
+BITMAP  IDB_ALNVERTR        "..\\resource\\alnvertr.bmp"
+
+/* --- Shading menu options ---------------------------------------------*/
+
+BITMAP  IDB_LBSHADE         "..\\resource\\lbshade.bmp"
+BITMAP  IDB_LTSHADE         "..\\resource\\ltshade.bmp"
+BITMAP  IDB_RTSHADE         "..\\resource\\rtshade.bmp"
+BITMAP  IDB_RBSHADE         "..\\resource\\rbshade.bmp"
+
+/* --- Arrow bitmaps for in the arrow menu ------------------------------*/
+
+BITMAP  IDB_ARROW1          "..\\resource\\arr1.bmp"
+BITMAP  IDB_ARROW2          "..\\resource\\arr2.bmp"
+BITMAP  IDB_ARROW3          "..\\resource\\arx1.bmp"
+BITMAP  IDB_ARROW4          "..\\resource\\arx2.bmp"
+BITMAP  IDB_ARROW5          "..\\resource\\arx3.bmp"
+BITMAP  IDB_ARROW6          "..\\resource\\arx4.bmp"
+BITMAP  IDB_ARROW7          "..\\resource\\arx5.bmp"
+BITMAP  IDB_ARROW8          "..\\resource\\arx6.bmp"
+BITMAP  IDB_ARROW9          "..\\resource\\arx7.bmp"
+BITMAP  IDB_ARROW10         "..\\resource\\arx8.bmp"
+BITMAP  IDB_ARROW11         "..\\resource\\arx11.bmp"
+BITMAP  IDB_ARROW12         "..\\resource\\arx12.bmp"
+
+/* --- Graphic Pointers -----------------------------------------------	*/
+POINTER ID_DRAWIT    "..\\resource\\drawit.ico"       /* PROGRAM ICON */
+POINTER IDP_CIRCLE   "..\\resource\\circle.ptr"
+POINTER IDP_SQUARE   "..\\resource\\square.ptr"
+POINTER IDP_POLYLINE "..\\resource\\pline.ptr"
+POINTER IDP_PARTARC  "..\\resource\\parc.ptr"
+POINTER IDP_TEXT     "..\\resource\\dtext.ptr"
+POINTER IDP_CROP     "..\\resource\\crop.ptr"
+
+DLGTEMPLATE 11 LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "About DrawIt", 11, 41, 8, 231, 108, FS_SYSMODAL | NOT
+            FS_DLGBORDER | FS_BORDER | WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        ICON            ID_DRAWIT, 13, 4, 84, 21, 16, WS_GROUP
+        LTEXT           "The Netherlands", 12, 73, 29, 81, 8
+        CTEXT           "DrawIt Version 3.5", 14, 32, 78, 172, 28,
+                        DT_VCENTER
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0x00FF0000L
+                        PRESPARAMS PP_FONTNAMESIZE, "24.Tms Rmn"
+        CTEXT           "This program is written by", 15, 50, 66, 133, 8
+        CTEXT           "Jasper de Keijzer", 16, 60, 55, 110, 8
+        CTEXT           "(C) copyright JdK Software. (1993-2002)", 17, 23,
+                        43, 180, 8
+        DEFPUSHBUTTON   "OK", DID_OK, 93, 7, 40, 14
+    END
+END
+
+
+ACCELTABLE ID_RESOURCE
+BEGIN
+	VK_DELETE, IDM_CUT,  VIRTUALKEY, SHIFT
+	VK_INSERT, IDM_COPY, VIRTUALKEY, CONTROL
+	VK_INSERT, IDM_PASTE,VIRTUALKEY, SHIFT
+        VK_F3    , IDM_EXIT, VIRTUALKEY
+         65      , IDM_SAVA, CHAR,CONTROL
+         97      , IDM_SAVA, CHAR,CONTROL
+         66      , IDM_BMP,  CHAR,CONTROL
+         98      , IDM_BMP,  CHAR,CONTROL
+        109      , IDM_METAFILE, CHAR,CONTROL
+         77      , IDM_METAFILE, CHAR,CONTROL
+        110      , IDM_FILN, CHAR,CONTROL
+         78      , IDM_FILN, CHAR,CONTROL
+        111      , IDM_FILE, CHAR,CONTROL
+         79      , IDM_FILE, CHAR,CONTROL
+        115      , IDM_SAVE, CHAR,CONTROL
+         83      , IDM_SAVE, CHAR,CONTROL
+        114      , IDM_REFRESH, CHAR,CONTROL
+         82      , IDM_REFRESH, CHAR,CONTROL
+         80      , IDM_PRINTPREVIEW,CHAR,CONTROL
+        112      , IDM_PRINTPREVIEW,CHAR,CONTROL
+         84      , IDM_EDITTEXT,CHAR,CONTROL
+         116     , IDM_EDITTEXT,CHAR,CONTROL
+         73      , IDM_INSTEXT,CHAR,CONTROL
+        105      , IDM_INSTEXT,CHAR,CONTROL
+         47      , IDM_SELECTALL,CHAR,CONTROL
+         92      , IDM_DESELECTALL,CHAR,CONTROL
+        119      , IDM_WINDOWSWMF,CHAR,CONTROL
+         87      , IDM_WINDOWSWMF,CHAR,CONTROL
+END
+
+MENU ID_RESOURCE
+BEGIN
+	SUBMENU "~File", IDM_FILEMENU
+	BEGIN
+		MENUITEM "~Open\tCtrl+O",         IDM_FILE, MIS_TEXT
+		MENUITEM "~New\tCtrl+N",          IDM_FILN, MIS_TEXT
+		MENUITEM "~Save\tCtrl+S",         IDM_SAVE, MIS_TEXT
+		MENUITEM "S~ave as...\tCtrl+A",   IDM_SAVA, MIS_TEXT
+                MENUITEM SEPARATOR
+		MENUITEM "Export as OS/2 metafile",IDM_METAEXP, MIS_TEXT
+		MENUITEM "Export as Bitmap",IDM_BITMAPEXP,MIS_TEXT
+                MENUITEM SEPARATOR
+		SUBMENU "I~mport image",IDM_IMPORT, MIS_TEXT
+		BEGIN
+                   MENUITEM "~Bitmap\tCtrl+B",  IDM_BMP     , MIS_TEXT
+                   MENUITEM "M~etaFile\tCtrl+M",IDM_METAFILE, MIS_TEXT
+                   MENUITEM SEPARATOR
+                   MENUITEM "Windows metafile\tCtrl+W",IDM_WINDOWSWMF,MIS_TEXT
+                   MENUITEM "Lotus 123 pic",IDM_LOTUSPIC, MIS_TEXT
+                END
+                MENUITEM SEPARATOR
+		SUBMENU "E~xport selection as",IDM_EXPSEL, MIS_TEXT
+		BEGIN
+                   MENUITEM "OS/2 M~etaFile",   IDM_EXPSELMETA,MIS_TEXT
+                   MENUITEM SEPARATOR
+                   MENUITEM "~Other formats...", IDM_OTHERFORM ,MIS_TEXT
+                END
+                MENUITEM SEPARATOR
+		MENUITEM "~Print",IDM_PRINTAS, MIS_TEXT
+		MENUITEM "Pr~int Preview..\tCtrl+P",IDM_PRINTPREVIEW, MIS_TEXT
+                MENUITEM SEPARATOR
+                MENUITEM "E~xit\tF3",IDM_EXIT,MIS_TEXT
+//		MENUITEM "Dump spline",IDM_DUMPSPLINE,MIS_TEXT
+	END
+
+	SUBMENU "~Edit", IDM_EDIT
+	BEGIN
+	        MENUITEM "Cu~t\tShift+Delete",IDM_CUT,   MIS_TEXT
+	        MENUITEM "~Copy\tCtrl+Ins",   IDM_COPY,  MIS_TEXT
+	        MENUITEM "~Paste\tShift+Ins", IDM_PASTE, MIS_TEXT
+                MENUITEM SEPARATOR
+	        MENUITEM "Cl~ear\tDelete", IDM_CLEAR, MIS_TEXT
+                MENUITEM SEPARATOR
+		MENUITEM "~Group",        IDM_GROUP,   MIS_TEXT
+		MENUITEM "~Ungroup",      IDM_UNGROUP, MIS_TEXT
+                MENUITEM SEPARATOR
+                MENUITEM "~Refresh Now!\tCtrl+R",  IDM_REFRESH, MIS_TEXT
+        END
+
+	SUBMENU "~Attributes", IDM_LINE
+	BEGIN
+		SUBMENU "~Linetype...",  IDM_LINETYPE, MIS_TEXT
+		BEGIN
+                MENUITEM "", IDM_LINEDOT            , MIS_OWNERDRAW
+		MENUITEM "", IDM_LINESHORTDASH      , MIS_OWNERDRAW
+   		MENUITEM "", IDM_LINEDASHDOT        , MIS_OWNERDRAW
+   		MENUITEM "", IDM_LINEDOUBLEDOT      , MIS_OWNERDRAW
+   		MENUITEM "", IDM_LINELONGDASH       , MIS_OWNERDRAW
+   		MENUITEM "", IDM_LINEDASHDOUBLEDOT  , MIS_OWNERDRAW
+		MENUITEM "", IDM_LINESOLID          , MIS_OWNERDRAW, MIA_CHECKED
+		MENUITEM "", IDM_LINEALTERNATE      , MIS_OWNERDRAW
+		MENUITEM "Invisible",IDM_LINEINVISIBLE,MIS_TEXT
+		END
+		SUBMENU "L~ine Size...", IDM_LNSIZE, MIS_TEXT
+		BEGIN
+                   MENUITEM "Normal",IDM_LNNORM,MIS_OWNERDRAW, MIA_CHECKED
+		   MENUITEM "", IDM_LN3, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN4, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN5, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN6, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN7, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN8, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN9, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN10, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN11, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN12, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN13, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN14, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN15, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN16, MIS_OWNERDRAW
+		END
+		SUBMENU "Line ~Join...", IDM_LNJOIN, MIS_TEXT
+		BEGIN
+		   MENUITEM "~Default",IDM_LNDEFAULT, MIS_TEXT
+		   MENUITEM "~Mitre", IDM_LNMITRE, MIS_TEXT
+		   MENUITEM "~Round", IDM_LNROUND, MIS_TEXT
+		   MENUITEM "~Bevel", IDM_LNBEVEL, MIS_TEXT
+		END
+		SUBMENU "Shading", IDM_OBJSHADE,MIS_TEXT
+		BEGIN
+		   MENUITEM "", IDM_LBSHADE, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LTSHADE, MIS_OWNERDRAW
+		   MENUITEM "", IDM_RTSHADE, MIS_OWNERDRAW
+		   MENUITEM "", IDM_RBSHADE, MIS_OWNERDRAW 
+		   MENUITEM "None",IDM_SHADENONE,MIS_TEXT | MIS_BREAKSEPARATOR
+		   MENUITEM "Shade...",IDM_SHADECLR,MIS_TEXT
+		END
+		MENUITEM SEPARATOR
+   		MENUITEM "Line ends",IDM_ARROWS, MIS_TEXT
+                MENUITEM SEPARATOR
+                MENUITEM "Find Color",IDM_FINDCOLOR, MIS_TEXT
+		MENUITEM SEPARATOR
+		SUBMENU "~Filling Pattern", IDM_CST, MIS_TEXT
+		BEGIN
+                   MENUITEM "None",IDM_NOPATTERN,MIS_TEXT, MIA_CHECKED
+                   MENUITEM "Gradient",IDM_GRADIENT,MIS_TEXT
+                   MENUITEM "Fountain",IDM_FOUNTAIN,MIS_TEXT
+		   MENUITEM "", IDM_HALFTONE, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+		   MENUITEM "", IDM_SOLID   , MIS_OWNERDRAW
+		   MENUITEM "", IDM_DENSE1  , MIS_OWNERDRAW
+		   MENUITEM "", IDM_DENSE2  , MIS_OWNERDRAW
+		   MENUITEM "", IDM_DENSE3  , MIS_OWNERDRAW
+		   MENUITEM "", IDM_VERT    , MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+		   MENUITEM "", IDM_HORIZ   , MIS_OWNERDRAW
+		   MENUITEM "", IDM_DIAG1   , MIS_OWNERDRAW
+		   MENUITEM "", IDM_DIAG2   , MIS_OWNERDRAW
+		   MENUITEM "", IDM_DIAG3   , MIS_OWNERDRAW
+		END
+		MENUITEM SEPARATOR
+		MENUITEM "~Gradient",IDM_GRD,MIS_TEXT
+		MENUITEM "~Fountain",IDM_FTAIN,MIS_TEXT
+		MENUITEM SEPARATOR
+		SUBMENU "A~ttributes",IDM_ATTR,MIS_TEXT
+		BEGIN
+ 		MENUITEM "~Copy->Application",IDM_COPYATTR,MIS_TEXT
+		MENUITEM "~Copy->Object(s)",IDM_COPYATTR2OBJ,MIS_TEXT
+		END
+                MENUITEM SEPARATOR
+		SUBMENU "~Align...", IDM_ALIGN,MIS_TEXT
+		BEGIN
+		   MENUITEM "",IDM_ALIGNHORZ,MIS_OWNERDRAW
+		   MENUITEM "",IDM_ALNHORZB,MIS_OWNERDRAW
+		   MENUITEM "",IDM_ALNHORZT,MIS_OWNERDRAW
+		   MENUITEM "",IDM_ALIGNVERT,MIS_OWNERDRAW
+		   MENUITEM "",IDM_ALNVERTL,MIS_OWNERDRAW
+		   MENUITEM "",IDM_ALNVERTR,MIS_OWNERDRAW
+		END
+	END
+	SUBMENU "~Text", IDM_FONT
+	BEGIN
+		MENUITEM "~Properties", IDM_SELTEXT, MIS_TEXT, MIA_DISABLED
+		MENUITEM "~Font", IDM_FNT, MIS_TEXT
+		MENUITEM "Edit text\tCtrl+T",IDM_EDITTEXT,MIS_TEXT, MIA_DISABLED
+		MENUITEM "C~ircular", IDM_TXTCIRC, MIS_TEXT, MIA_DISABLED
+		MENUITEM "~CharBox 1:1", IDM_CHARBOX,MIS_TEXT, MIA_DISABLED
+		MENUITEM SEPARATOR
+		SUBMENU "Outline width...", IDM_LNSIZE, MIS_TEXT,MIA_DISABLED
+		BEGIN
+		   MENUITEM "None",IDM_NOOUTLINE,MIS_TEXT
+		   MENUITEM "Normal",IDM_LNNORM,MIS_OWNERDRAW
+   		   MENUITEM "", IDM_LN3, MIS_OWNERDRAW
+   		   MENUITEM "", IDM_LN4, MIS_OWNERDRAW
+   		   MENUITEM "", IDM_LN5, MIS_OWNERDRAW
+   		   MENUITEM "", IDM_LN6, MIS_OWNERDRAW
+   		   MENUITEM "", IDM_LN7, MIS_OWNERDRAW
+   		   MENUITEM "", IDM_LN8, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN9, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN10, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN11, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN12, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN13, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN14, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN15, MIS_OWNERDRAW
+		   MENUITEM "", IDM_LN16, MIS_OWNERDRAW
+   		END
+   		MENUITEM SEPARATOR
+		SUBMENU "Fli~p",IDM_FLIP,MIS_TEXT, MIA_DISABLED
+		BEGIN
+		   MENUITEM "~Horizontal", IDM_FLIPH,MIS_TEXT
+		   MENUITEM "~Vertical",   IDM_FLIPV,MIS_TEXT
+		END
+   		MENUITEM SEPARATOR
+   		MENUITEM "Break text input\tCtrl-I", IDM_INSTEXT,MIS_TEXT
+	END
+SUBMENU "~Images", IDM_IMAGE
+   BEGIN
+      MENUITEM "~Properties",IDM_SELBMP, MIS_TEXT, MIA_DISABLED
+      MENUITEM SEPARATOR
+      SUBMENU "~Flip Image",IDM_FLIPIMG,MIS_TEXT, MIA_DISABLED
+      BEGIN
+         MENUITEM "~Horizontal", IDM_FLIPHIMG,MIS_TEXT
+         MENUITEM "~Vertical",   IDM_FLIPVIMG,MIS_TEXT
+      END
+      SUBMENU "Color ~Rotation",IDM_ROTATION,MIS_TEXT, MIA_DISABLED
+      BEGIN
+         MENUITEM "UP\t+", IDM_ROTATIONUP  ,MIS_TEXT
+         MENUITEM "DOWN\t-", IDM_ROTATIONDOWN,MIS_TEXT
+      END
+      MENUITEM SEPARATOR
+      MENUITEM "~Crop Selected Image", IDM_CROP,MIS_TEXT, MIA_DISABLED
+      SUBMENU "Restore",IDM_RESTOREIMG,MIS_TEXT
+      BEGIN
+         MENUITEM "~Aspectratio", IDM_RESTASPECT,MIS_TEXT, MIA_DISABLED
+         MENUITEM "~Size",        IDM_RESTORESIZE,MIS_TEXT, MIA_DISABLED
+         MENUITEM "~Palette",     IDM_UNDOPALETTE,MIS_TEXT,MIA_DISABLED
+      END
+      SUBMENU "Colors", IDM_COLORSMENU,MIS_TEXT
+      BEGIN
+         MENUITEM "~gray scale",IDM_GRAYSCALE,MIS_TEXT, MIA_DISABLED
+         MENUITEM "black and ~white",IDM_BLACKWHITE,MIS_TEXT, MIA_DISABLED
+         MENUITEM "In~vert\tI",IDM_IMGINVERT,MIS_TEXT,MIA_DISABLED
+         MENUITEM "Increase ~brightness\tB",IDM_IMGBRIGHT,MIS_TEXT,MIA_DISABLED
+         MENUITEM SEPARATOR
+         MENUITEM "Copy" , IDM_COLORCOPY,  MIS_TEXT
+         MENUITEM "Paste", IDM_COLORPASTE, MIS_TEXT, MIA_DISABLED
+      END
+      MENUITEM SEPARATOR
+      MENUITEM "Circular", IDM_CIRBMP, MIS_TEXT, MIA_DISABLED
+      MENUITEM "Square",   IDM_NORBMP, MIS_TEXT, MIA_DISABLED
+      MENUITEM SEPARATOR
+      SUBMENU "Rotate",         IDM_IMGROT,MIS_TEXT,MIA_DISABLED
+      BEGIN
+         MENUITEM " 90 degrees" ,IDM_IMGROT90,MIS_TEXT
+         MENUITEM "-90 degrees" ,IDM_IMGROT270,MIS_TEXT
+      END
+      MENUITEM SEPARATOR
+      SUBMENU "Clippath",IDM_IMGCLIPPATH,MIS_TEXT
+      BEGIN
+         MENUITEM "Set clippath",IDM_SETCLIPPATH,MIS_TEXT
+         MENUITEM "Remove clippath",IDM_DELCLIPPATH,MIS_TEXT
+      END
+      MENUITEM SEPARATOR
+      SUBMENU "Display method",IDM_ROPCODE,MIS_TEXT
+      BEGIN
+         MENUITEM "Normal",IDM_SRCCOPY,MIS_TEXT
+         MENUITEM SEPARATOR
+         MENUITEM "Source OR  destination",IDM_SRCPAINT,MIS_TEXT
+         MENUITEM "Source AND destination",IDM_SRCAND,MIS_TEXT
+         MENUITEM "Source XOR destination",IDM_SRCINVERT,MIS_TEXT
+         MENUITEM "Source AND NOT destination",IDM_SRCERACE,MIS_TEXT
+         MENUITEM "NOT Source",IDM_NOTSRCCOPY,MIS_TEXT
+         MENUITEM "NOT Source AND NOT destination",IDM_NOTSRCERASE,MIS_TEXT
+         MENUITEM "Source AND Pattern",IDM_MERGECOPY,MIS_TEXT
+         MENUITEM "Pattern Copy",IDM_PATCOPY,MIS_TEXT
+         MENUITEM "NOT Source OR Pattern OR Destination",IDM_PATPAINT,MIS_TEXT
+         MENUITEM "Destination XOR Pattern",IDM_PATINVERT,MIS_TEXT
+         MENUITEM "NOT Destination",IDM_PATDSTINVERT,MIS_TEXT
+         MENUITEM "Zero",IDM_PATZERO,MIS_TEXT
+         MENUITEM "One", IDM_PATONE ,MIS_TEXT
+      END
+      MENUITEM SEPARATOR
+      MENUITEM "~Save image",IDM_IMGOTHERFORMATS, MIS_TEXT, MIA_DISABLED
+      END
+
+	SUBMENU "O~bjects", IDM_SPEC
+	BEGIN
+		MENUITEM "~Special Lines",    IDM_SPECLINES   , MIS_TEXT
+		MENUITEM "~Regular polystar" ,IDM_REGPOLYSTAR , MIS_TEXT
+		SUBMENU  "~Arrows"           ,IDM_ARROW       , MIS_TEXT
+		BEGIN
+                  MENUITEM "Arrow~1" ,IDM_ARROW1 , MIS_OWNERDRAW
+                  MENUITEM "Arrow~2" ,IDM_ARROW2 , MIS_OWNERDRAW
+                  MENUITEM "Arrow~3" ,IDM_ARROW3 , MIS_OWNERDRAW
+                  MENUITEM "Arrow~4" ,IDM_ARROW4 , MIS_OWNERDRAW
+                  MENUITEM "Arrow~5" ,IDM_ARROW5 , MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+                  MENUITEM "Arrow~6" ,IDM_ARROW6 , MIS_OWNERDRAW 
+                  MENUITEM "Arrow~7" ,IDM_ARROW7 , MIS_OWNERDRAW
+                  MENUITEM "Arrow~8" ,IDM_ARROW8 , MIS_OWNERDRAW
+                  MENUITEM "Arrow~9" ,IDM_ARROW9 , MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+                  MENUITEM "Arrow10" ,IDM_ARROW10, MIS_OWNERDRAW
+                  MENUITEM "Arrow11" ,IDM_ARROW11, MIS_OWNERDRAW
+                  MENUITEM "Arrow12" ,IDM_ARROW12, MIS_OWNERDRAW
+
+		END
+		SUBMENU  "~FreeStyle lines",  IDM_FREESTYLELINE, MIS_TEXT
+		BEGIN
+                  MENUITEM "~Normal" ,IDM_FREESTYLENORM , MIS_TEXT
+		  MENUITEM "F~ine",   IDM_FREESTYLEFINE , MIS_TEXT
+		END
+        END
+        SUBMENU "~View",    IDM_VIEW,  MIS_TEXT
+        BEGIN
+           SUBMENU "C~oordinates...", IDM_COORD,MIS_TEXT
+           BEGIN
+              MENUITEM "0.1 mm"  , IDM_MM, MIS_TEXT
+              MENUITEM "0.1 inch",IDM_INCH,MIS_TEXT
+           END
+           SUBMENU "Snap on grid", IDM_SNAPONGRID,MIS_TEXT
+           BEGIN
+              MENUITEM "O~n",IDM_GRIDON,MIS_TEXT
+              MENUITEM "~Off", IDM_GRIDOFF, MIS_TEXT, MIA_CHECKED
+              MENUITEM SEPARATOR
+              MENUITEM "~Setup Gridsize",IDM_GRIDSIZE,MIS_TEXT
+           END
+           MENUITEM SEPARATOR
+           SUBMENU "~Suppress gradient filling",IDM_SUPPRESSFILL,MIS_TEXT
+           BEGIN
+              MENUITEM "O~n" ,IDM_SUPPRESSON,MIS_TEXT
+              MENUITEM "~Off",IDM_SUPPRESSOFF,MIS_TEXT, MIA_CHECKED
+           END
+           MENUITEM SEPARATOR
+           SUBMENU "~Zoom",IDM_ZOOMMENU,MIS_TEXT
+           BEGIN
+              MENUITEM "25%"  ,IDM_ZOOM2, MIS_TEXT
+              MENUITEM "50%"  ,IDM_ZOOM5, MIS_TEXT
+              MENUITEM "100%" ,IDM_ZOOM10,MIS_TEXT,MIA_CHECKED
+              MENUITEM "150%" ,IDM_ZOOM15,MIS_TEXT
+              MENUITEM "200%" ,IDM_ZOOM20,MIS_TEXT
+              MENUITEM "250%" ,IDM_ZOOM25,MIS_TEXT
+              MENUITEM "300%" ,IDM_ZOOM30,MIS_TEXT
+           END
+        END
+        SUBMENU "~Options",    IDM_OPTIONS,  MIS_TEXT
+        BEGIN
+           MENUITEM "~Formsize",       IDM_FORMSIZE,MIS_TEXT
+           SUBMENU "~Object Selection",IDM_SELTYPE ,MIS_TEXT
+           BEGIN
+              MENUITEM "~In object area",   IDM_ONAREA, MIS_TEXT
+              MENUITEM "O~n object outline",IDM_ONLINE, MIS_TEXT
+           END
+        END
+        SUBMENU     "~Help",    IDM_HELP,   MIS_TEXT | MIS_HELP
+        BEGIN
+                 MENUITEM    "Help ~index",          IDM_HELPINDEX,      MIS_TEXT
+//                 MENUITEM    "~General help",        IDM_HELPGENERAL,    MIS_TEXT
+//                 MENUITEM    "~Keys help",           IDM_HELPKEYS,       MIS_TEXT
+                 MENUITEM    "~Using help",          IDM_HELPUSINGHELP,  MIS_TEXT
+                 MENUITEM SEPARATOR
+                 MENUITEM    "~Product information", IDM_HELPPRODINFO,   MIS_TEXT
+        END
+END
+/*
+** Image popup menu. PASOP & LOOKOUT is must stay the same as the normal
+** image menu!!
+*/
+MENU  IDM_IMAGE
+BEGIN
+   MENUITEM "~Properties",IDM_SELBMP, MIS_TEXT
+   MENUITEM SEPARATOR
+   SUBMENU "Flip Image",IDM_FLIPIMG,MIS_TEXT
+   BEGIN
+      MENUITEM "Horizontal", IDM_FLIPHIMG,MIS_TEXT
+      MENUITEM "Vertical",   IDM_FLIPVIMG,MIS_TEXT
+   END
+   SUBMENU "Rotate color",IDM_ROTATION,MIS_TEXT
+   BEGIN
+      MENUITEM "UP", IDM_ROTATIONUP  ,MIS_TEXT
+      MENUITEM "DOWN", IDM_ROTATIONDOWN,MIS_TEXT
+   END
+   MENUITEM SEPARATOR
+   MENUITEM "Crop Image", IDM_CROP,MIS_TEXT
+   SUBMENU "Restore",IDM_RESTOREIMG,MIS_TEXT
+   BEGIN
+      MENUITEM "~Aspectratio", IDM_RESTASPECT,MIS_TEXT
+      MENUITEM "~Size",        IDM_RESTORESIZE,MIS_TEXT
+      MENUITEM "~Palette",     IDM_UNDOPALETTE,MIS_TEXT
+   END
+   SUBMENU "Colors", IDM_COLORSMENU,MIS_TEXT
+   BEGIN
+      MENUITEM "~gray scale",IDM_GRAYSCALE,MIS_TEXT
+      MENUITEM "black and ~white",IDM_BLACKWHITE,MIS_TEXT
+      MENUITEM "In~vert\tI",IDM_IMGINVERT,MIS_TEXT
+      MENUITEM "Increase ~brightness\tB",IDM_IMGBRIGHT,MIS_TEXT
+      MENUITEM SEPARATOR
+      MENUITEM "Copy" , IDM_COLORCOPY,  MIS_TEXT
+      MENUITEM "Paste", IDM_COLORPASTE, MIS_TEXT
+   END
+   MENUITEM SEPARATOR
+   MENUITEM "Circular", IDM_CIRBMP, MIS_TEXT
+   MENUITEM "Square",   IDM_NORBMP, MIS_TEXT
+   MENUITEM SEPARATOR
+   SUBMENU "Rotate",         IDM_IMGROT,MIS_TEXT
+   BEGIN
+      MENUITEM " 90 degrees" ,IDM_IMGROT90,MIS_TEXT
+      MENUITEM "-90 degrees" ,IDM_IMGROT270,MIS_TEXT
+   END
+   MENUITEM SEPARATOR
+   MENUITEM "Remove clippath",IDM_DELCLIPPATH,MIS_TEXT
+   MENUITEM SEPARATOR
+   SUBMENU "Display method",IDM_ROPCODE,MIS_TEXT
+   BEGIN
+      MENUITEM "Normal",IDM_SRCCOPY,MIS_TEXT
+      MENUITEM SEPARATOR
+      MENUITEM "Source OR  destination",IDM_SRCPAINT,MIS_TEXT
+      MENUITEM "Source AND destination",IDM_SRCAND,MIS_TEXT
+      MENUITEM "Source XOR destination",IDM_SRCINVERT,MIS_TEXT
+      MENUITEM "Source AND NOT destination",IDM_SRCERACE,MIS_TEXT
+      MENUITEM "NOT Source",IDM_NOTSRCCOPY,MIS_TEXT
+      MENUITEM "NOT Source AND NOT destination",IDM_NOTSRCERASE,MIS_TEXT
+      MENUITEM "Source AND Pattern",IDM_MERGECOPY,MIS_TEXT
+      MENUITEM "Pattern Copy",IDM_PATCOPY,MIS_TEXT
+      MENUITEM "NOT Source OR Pattern OR Destination",IDM_PATPAINT,MIS_TEXT
+      MENUITEM "Destination XOR Pattern",IDM_PATINVERT,MIS_TEXT
+      MENUITEM "NOT Destination",IDM_PATDSTINVERT,MIS_TEXT
+      MENUITEM "Zero",IDM_PATZERO,MIS_TEXT
+      MENUITEM "One", IDM_PATONE ,MIS_TEXT
+   END
+   MENUITEM SEPARATOR
+   MENUITEM "Save image",IDM_IMGOTHERFORMATS, MIS_TEXT
+END
+/*
+** Clippath popup menu...
+*/
+MENU IDM_CLIPPATH
+BEGIN
+   MENUITEM "Set clippath",   IDM_SETCLIPPATH,MIS_TEXT
+END
+/*
+** Standard popupmenu
+*/
+MENU IDM_LINE
+BEGIN
+   MENUITEM "Properties",IDM_PROPERTIES,MIS_TEXT
+MENUITEM SEPARATOR
+SUBMENU "~Linetype...",  IDM_LINETYPE, MIS_TEXT
+BEGIN
+   MENUITEM "", IDM_LINEDOT            , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINESHORTDASH      , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINEDASHDOT        , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINEDOUBLEDOT      , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINELONGDASH       , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINEDASHDOUBLEDOT  , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINESOLID          , MIS_OWNERDRAW, MIA_CHECKED
+   MENUITEM "", IDM_LINEALTERNATE      , MIS_OWNERDRAW
+   MENUITEM "Invisible",IDM_LINEINVISIBLE,MIS_TEXT
+END
+SUBMENU "Line Size...", IDM_LNSIZE, MIS_TEXT
+BEGIN
+   MENUITEM "Normal",IDM_LNNORM,MIS_OWNERDRAW, MIA_CHECKED
+   MENUITEM "", IDM_LN3, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN4, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN5, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN6, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN7, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN8, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN9, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN10, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN11, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN12, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN13, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN14, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN15, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN16, MIS_OWNERDRAW
+END
+SUBMENU "Line Join...", IDM_LNJOIN, MIS_TEXT
+BEGIN
+   MENUITEM "Default",IDM_LNDEFAULT, MIS_TEXT
+   MENUITEM "Mitre", IDM_LNMITRE, MIS_TEXT
+   MENUITEM "Round", IDM_LNROUND, MIS_TEXT
+   MENUITEM "Bevel", IDM_LNBEVEL, MIS_TEXT
+END
+SUBMENU "Shading", IDM_OBJSHADE,MIS_TEXT
+BEGIN
+   MENUITEM "", IDM_LBSHADE, MIS_OWNERDRAW
+   MENUITEM "", IDM_LTSHADE, MIS_OWNERDRAW
+   MENUITEM "", IDM_RTSHADE, MIS_OWNERDRAW
+   MENUITEM "", IDM_RBSHADE, MIS_OWNERDRAW 
+   MENUITEM "None",IDM_SHADENONE,MIS_TEXT | MIS_BREAKSEPARATOR
+   MENUITEM "Shade...",IDM_SHADECLR,MIS_TEXT
+END
+MENUITEM SEPARATOR
+   MENUITEM "Line ends",IDM_ARROWS, MIS_TEXT
+MENUITEM SEPARATOR
+SUBMENU "~Filling Pattern", IDM_CST, MIS_TEXT
+BEGIN
+   MENUITEM "None",IDM_NOPATTERN,MIS_TEXT, MIA_CHECKED
+   MENUITEM "Gradient",IDM_GRADIENT,MIS_TEXT
+   MENUITEM "Fountain",IDM_FOUNTAIN,MIS_TEXT
+   MENUITEM "", IDM_HALFTONE, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+   MENUITEM "", IDM_SOLID   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DENSE1  , MIS_OWNERDRAW
+   MENUITEM "", IDM_DENSE2  , MIS_OWNERDRAW
+   MENUITEM "", IDM_DENSE3  , MIS_OWNERDRAW
+   MENUITEM "", IDM_VERT    , MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+   MENUITEM "", IDM_HORIZ   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DIAG1   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DIAG2   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DIAG3   , MIS_OWNERDRAW
+END
+MENUITEM SEPARATOR
+SUBMENU "Attributes",IDM_ATTR,MIS_TEXT
+BEGIN
+   MENUITEM "Copy->Application",IDM_COPYATTR,MIS_TEXT
+   MENUITEM "Copy->Object(s)",IDM_COPYATTR2OBJ,MIS_TEXT
+END
+MENUITEM SEPARATOR
+MENUITEM "~Refresh Now!",  IDM_REFRESH, MIS_TEXT
+END
+/*
+** Textpopup menu...
+*/
+MENU  IDM_FONT
+BEGIN
+MENUITEM "~Properties", IDM_SELTEXT, MIS_TEXT
+MENUITEM "Font", IDM_FNT, MIS_TEXT
+MENUITEM "C~ircular", IDM_TXTCIRC, MIS_TEXT
+MENUITEM "~CharBox 1:1", IDM_CHARBOX,MIS_TEXT
+MENUITEM SEPARATOR
+SUBMENU "Outline width...", IDM_LNSIZE, MIS_TEXT
+BEGIN
+   MENUITEM "None",IDM_NOOUTLINE,MIS_TEXT
+   MENUITEM "Normal",IDM_LNNORM,MIS_OWNERDRAW, MIA_CHECKED
+   MENUITEM "", IDM_LN3, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN4, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN5, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN6, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN7, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN8, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN9, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN10, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN11, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN12, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN13, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN14, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN15, MIS_OWNERDRAW
+   MENUITEM "", IDM_LN16, MIS_OWNERDRAW
+END
+MENUITEM SEPARATOR
+SUBMENU "Flip",IDM_FLIP,MIS_TEXT
+BEGIN
+   MENUITEM "Horizontal", IDM_FLIPH,MIS_TEXT
+   MENUITEM "Vertical",   IDM_FLIPV,MIS_TEXT
+END
+MENUITEM SEPARATOR
+SUBMENU "~Filling Pattern", IDM_CST, MIS_TEXT
+BEGIN
+   MENUITEM "None",IDM_NOPATTERN,MIS_TEXT, MIA_CHECKED
+   MENUITEM "Gradient",IDM_GRADIENT,MIS_TEXT
+   MENUITEM "Fountain",IDM_FOUNTAIN,MIS_TEXT
+   MENUITEM "", IDM_HALFTONE, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+   MENUITEM "", IDM_SOLID   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DENSE1  , MIS_OWNERDRAW
+   MENUITEM "", IDM_DENSE2  , MIS_OWNERDRAW
+   MENUITEM "", IDM_DENSE3  , MIS_OWNERDRAW
+   MENUITEM "", IDM_VERT    , MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+   MENUITEM "", IDM_HORIZ   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DIAG1   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DIAG2   , MIS_OWNERDRAW
+   MENUITEM "", IDM_DIAG3   , MIS_OWNERDRAW
+END
+MENUITEM SEPARATOR
+MENUITEM "~Refresh Now!",  IDM_REFRESH, MIS_TEXT
+END
+
+
+/*
+** BLOCK Textpopup menu...
+*/
+MENU  IDM_BLOCKTEXT
+BEGIN
+MENUITEM "~Properties", IDM_PROPERTIES, MIS_TEXT
+MENUITEM SEPARATOR
+MENUITEM "Font", IDM_FNT, MIS_TEXT
+MENUITEM "Edit text",IDM_EDITTEXT,MIS_TEXT
+MENUITEM SEPARATOR
+SUBMENU "Alignment",IDM_BTEXTALIGN,MIS_TEXT
+BEGIN
+   MENUITEM "Left",     IDM_BTEXTLEFT,  MIS_TEXT
+   MENUITEM "Right",    IDM_BTEXTRIGHT, MIS_TEXT
+   MENUITEM "Center",   IDM_BTEXTCENTER,MIS_TEXT
+   MENUITEM "Justified",IDM_BTEXTJUST,  MIS_TEXT
+END
+MENUITEM SEPARATOR
+SUBMENU "Extra line spacing",IDM_BTEXTSPACE,MIS_TEXT
+BEGIN
+   MENUITEM "None",  IDM_BTEXTSPACENONE,   MIS_TEXT
+   MENUITEM "Single",IDM_BTEXTSPACESINGLE, MIS_TEXT
+   MENUITEM "Double",IDM_BTEXTSPACEHALF,   MIS_TEXT
+   MENUITEM "Triple",IDM_BTEXTSPACEDOUBLE, MIS_TEXT
+END
+MENUITEM SEPARATOR
+SUBMENU "~Outline...",  IDM_LINETYPE, MIS_TEXT
+BEGIN
+   MENUITEM "", IDM_LINEDOT            , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINESHORTDASH      , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINEDASHDOT        , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINEDOUBLEDOT      , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINELONGDASH       , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINEDASHDOUBLEDOT  , MIS_OWNERDRAW
+   MENUITEM "", IDM_LINESOLID          , MIS_OWNERDRAW, MIA_CHECKED
+   MENUITEM "", IDM_LINEALTERNATE      , MIS_OWNERDRAW
+   MENUITEM "Invisible",IDM_LINEINVISIBLE,MIS_TEXT
+END
+MENUITEM SEPARATOR
+SUBMENU "~Column Pattern", IDM_CST, MIS_TEXT
+BEGIN
+   MENUITEM "None",IDM_NOPATTERN,MIS_TEXT, MIA_CHECKED
+   MENUITEM "Gradient",IDM_GRADIENT,MIS_TEXT
+   MENUITEM "Fountain",IDM_FOUNTAIN,MIS_TEXT
+   MENUITEM "Solid",   IDM_SOLID   ,MIS_TEXT
+END
+MENUITEM SEPARATOR
+SUBMENU "Column Color",IDM_FOUNTAINCOLOR,MIS_TEXT
+BEGIN
+MENUITEM "", IDM_CLR1 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR2 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR3 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR4 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR5 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR6 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR7 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR8 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR9 , MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR10, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR11, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR12, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR13, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR14, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR15, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR16, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR17, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR18, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR19, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR20, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR21, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR22, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR23, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR24, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR25, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR26, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR27, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR28, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR29, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR30, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR31, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR32, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR33, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR34, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR35, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR36, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR37, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR38, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR39, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR40, MIS_OWNERDRAW
+END
+MENUITEM SEPARATOR
+MENUITEM "~Refresh Now!",  IDM_REFRESH, MIS_TEXT
+END
+/*
+** Metafile object popupmenu
+*/
+MENU  IDM_METAPOPUP
+BEGIN
+   MENUITEM "~Properties",  IDM_PROPERTIES, MIS_TEXT
+   MENUITEM SEPARATOR
+   MENUITEM "Save to disk", IDM_SAVEMETA,MIS_TEXT
+   MENUITEM SEPARATOR
+   MENUITEM "~Refresh Now!",IDM_REFRESH, MIS_TEXT
+END
+
+
+DLGTEMPLATE ID_TXTOBJ LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Text Attributes", ID_TXTOBJ, 37, 54, 311, 122,WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_TXWND, 160, 70, 143, 46, "COLORCLASS", 
+                        WS_GROUP | WS_VISIBLE
+        LTEXT           "Cx", ID_LTCX, 11, 97, 18, 8
+        LTEXT           "Cy", ID_LTCY, 11, 83, 18, 8
+        CONTROL         "", ID_SPNCX, 32, 95, 35, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPNCY, 32, 81, 35, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPNLAYER, 22, 45, 35, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        GROUPBOX        "Layer", ID_GRPLAYER, 7, 37, 66, 32
+        GROUPBOX        "Size", ID_GRPSIZE, 7, 71, 66, 49
+        DEFPUSHBUTTON   "OK", DID_OK, 6, 6, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 52, 6, 40, 14
+        PUSHBUTTON      "Help", DID_HELP, 98, 6, 40, 14
+        LTEXT           "Shading color:", 403, 164, 58, 69, 8
+        CONTROL         "", ID_SPNHORZ, 114, 95, 35, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPNVERT, 114, 81, 35, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPNSHEAR, 101, 45, 35, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        LTEXT           "Cx", 428, 91, 97, 20, 8
+        LTEXT           "Cy", 429, 91, 83, 20, 8
+        GROUPBOX        "Shade", 430, 83, 71, 72, 49
+        GROUPBOX        "Shear", 431, 83, 37, 72, 32
+        CONTROL         "", ID_VALCOLOR, 160, 6, 145, 49, WC_VALUESET, 
+                        VS_RGB | VS_BORDER | WS_GROUP | WS_TABSTOP | 
+                        WS_VISIBLE
+                        CTLDATA 8, 0, 4, 10
+    END
+END
+
+
+DLGTEMPLATE 700 LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Edit Colors.....", 700, 65, 54, 249, 119, FS_SYSMODAL | 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", 701, 28, 20, 8, 73, WC_SCROLLBAR, SBS_VERT | 
+                        WS_VISIBLE
+        CONTROL         "", 702, 58, 20, 8, 73, WC_SCROLLBAR, SBS_VERT | 
+                        WS_VISIBLE
+        CONTROL         "", 703, 88, 19, 8, 73, WC_SCROLLBAR, SBS_VERT | 
+                        WS_VISIBLE
+        LTEXT           "", 704, 23, 8, 20, 8
+        LTEXT           "", 705, 53, 8, 20, 8
+        LTEXT           "", 706, 82, 8, 20, 8
+        CONTROL         "", 707, 121, 26, 121, 85, "RGBCLASS", WS_GROUP | 
+                        WS_VISIBLE
+        LTEXT           "Red", 708, 22, 94, 20, 8
+        LTEXT           "Green", 709, 48, 95, 32, 8
+        LTEXT           "Blue", 710, 84, 95, 28, 8
+        GROUPBOX        "RGB Values", 711, 4, 6, 112, 109
+        DEFPUSHBUTTON   "OK", DID_OK, 122, 6, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 169, 6, 40, 14
+    END
+END
+
+DLGTEMPLATE ID_GRADIENT LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Color Gradient", ID_GRADIENT, 52, 62, 341, 162, FS_SYSMODAL |
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_GRADIENTWND, 4, 41, 138, 119, "GRADIENTCLASS",
+                        WS_GROUP | WS_VISIBLE
+        CONTROL         "", ID_GRADSTART, 171, 36, 46, 122, WC_SLIDER,
+                        SLS_HORIZONTAL | SLS_VERTICAL | SLS_CENTER |
+                        SLS_LEFT | SLS_BUTTONSLEFT | SLS_HOMELEFT |
+                        SLS_PRIMARYSCALE1 | WS_VISIBLE
+                        CTLDATA 12, 0, 37, 0, 0, 0
+        CONTROL         "", ID_GRADSWEEP, 222, 36, 46, 122, WC_SLIDER,
+                        SLS_HORIZONTAL | SLS_VERTICAL | SLS_CENTER |
+                        SLS_LEFT | SLS_BUTTONSLEFT | SLS_HOMELEFT |
+                        SLS_PRIMARYSCALE1 | WS_VISIBLE
+                        CTLDATA 12, 0, 37, 0, 0, 0
+        LTEXT           "StartAngle", ID_TXTSTART, 156, 25, 51, 9
+        LTEXT           "Range", ID_TXTSWEEP, 210, 25, 30, 9
+        LTEXT           "360", ID_TXT360, 144, 152, 20, 8
+        LTEXT           "270", ID_TXT270, 144, 123, 20, 8
+        LTEXT           "180", ID_TXT180, 144, 96, 20, 8
+        LTEXT           "90", ID_TXT90, 144, 70, 20, 8
+        LTEXT           "0", ID_TXT0, 144, 40, 20, 8
+        CONTROL         "", ID_GRDSAT, 92, 25, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        LTEXT           "Saturation %", ID_TXTSAT, 29, 27, 55, 8
+        PUSHBUTTON      "Help", DID_HELP, 98, 5, 40, 14
+        AUTORADIOBUTTON "Left",   ID_GRADLEFT,  284, 112, 39, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Right",  ID_GRADRIGHT, 284, 102, 39, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Top",    ID_GRADTOP,   284, 92, 39, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Bottom", ID_GRADBOTTOM,284, 82, 46, 10, WS_TABSTOP
+//        AUTORADIOBUTTON "Center", ID_GRADCENTER,284, 72, 39, 10, WS_TABSTOP
+        GROUPBOX        "Start point", 805, 271, 62, 62, 76
+        LTEXT           "0", ID_GRADRANGE, 244, 26, 27, 8
+        DEFPUSHBUTTON   "OK", DID_OK, 7, 5, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 52, 5, 40, 14
+
+    END
+END
+
+
+DLGTEMPLATE ID_TXTCIRCULAR LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Circular text", ID_TXTCIRCULAR, 104, 30, 243, 137, FS_SYSMODAL | 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_TXTCIRWIN, 71, 20, 166, 115, "TXTCIRCULAR", 
+                        WS_GROUP | WS_VISIBLE
+        LTEXT           "Start Angle", ID_STXTSTART, 10, 92, 55, 8
+        LTEXT           "Sweep Angle", ID_STXTRANGE, 10, 119, 56, 8
+        AUTOCHECKBOX    "Circular", ID_CHKCIRCULAR, 10, 59, 46, 10
+        DEFPUSHBUTTON   "OK", DID_OK, 9, 2, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 55, 2, 40, 14
+        PUSHBUTTON      "Help", DID_HELP, 101, 2, 40, 14
+        CONTROL         "", ID_SPNSWEEP, 10, 106, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPNSTART, 10, 78, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+    END
+END
+
+
+DLGTEMPLATE 850 LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Object detail", 850, 70, 46, 140, 68, FS_SYSMODAL | WS_VISIBLE,
+            FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", 864, 50, 37, 39, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        DEFPUSHBUTTON   "OK", DID_OK, 27, 5, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 73, 5, 40, 14
+        GROUPBOX        "Layer", 851, 20, 29, 100, 31
+    END
+END
+
+DLGTEMPLATE IDD_QUERYPRINT LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Print Option ", IDD_QUERYPRINT, 89, 77, 279, 143,
+             FS_SYSMODAL | WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        LISTBOX         IDD_QPLISTBOX, 22, 47, 231, 80
+        PUSHBUTTON      "Help", DID_HELP, 214, 16, 40, 14
+        PUSHBUTTON      "Job Properties..", IDD_QPJOBPROP, 114, 16, 93, 14
+        DEFPUSHBUTTON   "OK", DID_OK, 22, 16, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 68, 16, 40, 14
+    END
+END
+
+DLGTEMPLATE ID_LAYER LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Set Active layer", ID_LAYER, 52, 46, 242, 125, FS_SYSMODAL | 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_LAYERCLASS, 125, 6, 111, 114, "LayerClass", 
+                        WS_GROUP | WS_VISIBLE
+        PUSHBUTTON      "Prev", ID_LAYERPREV, 11, 60, 40, 12
+        PUSHBUTTON      "Next", ID_LAYERNEXT, 66, 60, 40, 12
+        LTEXT           "Max Layers = 10", ID_LAYERTXT1, 25, 99, 84, 11
+        LTEXT           "", ID_LAYERTXT2, 66, 82, 29, 8
+        GROUPBOX        "", ID_LAYERGROUP, 4, 51, 114, 73
+        LTEXT           "Layer:", ID_LAYERTXT3, 13, 82, 41, 8
+        DEFPUSHBUTTON   "OK", DID_OK, 15, 6, 40, 14
+        PUSHBUTTON      "Help", DID_HELP, 70, 6, 40, 14
+        AUTOCHECKBOX    "Freeze other layers", ID_LAYERCHK, 7,    37, 113, 10
+        AUTOCHECKBOX    "Show only active layer", ID_LAYERACT, 7, 27, 118, 10
+    END
+END
+
+DLGTEMPLATE ID_SPLASHDLG LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "DrawIt for OS/2", ID_SPLASHDLG, 103, 102, 210, 110, NOT 
+            FS_DLGBORDER | WS_VISIBLE
+    BEGIN
+        CONTROL         "", ID_SPLASCLS, 4, 25, 203, 84, "SPLASHCLASS", 
+                        WS_GROUP | WS_VISIBLE
+        LTEXT           "(c) Copyrights JdK Software 1993-2002 all rights re"
+                        "served", ID_SPLTEXT5, 3, 16, 200, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        DEFPUSHBUTTON   "DEMO", DID_OK, 85, 3, 40, 11
+    END
+END
+
+DLGTEMPLATE ID_IMGDETAIL LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Image ", ID_IMGDETAIL, 71, 89, 250, 63, WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        LTEXT           "Width ",  -1, 22, 43, 34, 8
+        LTEXT           "Height ", -1, 22, 35, 39, 8
+        LTEXT           "Colors",  -1, 22, 27, 38, 8
+        GROUPBOX        "Layer", ID_GRPIMGDETAIL, 126, 23, 119, 38
+        CONTROL         "", ID_SPNIMLAYER, 163, 35, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        LTEXT           "640", ID_IMGWIDTH, 72, 43, 29, 8
+        LTEXT           "480", ID_IMGHEIGHT, 72, 35, 29, 8
+        LTEXT           "256", ID_IMGCOLORS, 72, 27, 37, 8
+        DEFPUSHBUTTON   "OK", DID_OK, 5, 5, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 51, 5, 40, 14
+        GROUPBOX        "Bitmap", ID_GFPBMP, 3, 23, 119, 38
+    END
+END
+
+
+DLGTEMPLATE ID_PREV LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Print Preview", ID_PREV, 76, 42, 272, 169, FS_SYSMODAL | 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_PREVWND, 14, 29, 128, 127, "LayerClass", 
+                        WS_GROUP | WS_VISIBLE
+        GROUPBOX        "Preview", ID_PREVGRP, 6, 24, 145, 141
+        GROUPBOX        "Current form", GRP_CURFORM, 156, 67, 112, 59
+        LTEXT           "Name:",-1, 162, 102, 31, 8
+        LTEXT           "Width:",-1, 162, 88, 29, 8
+        LTEXT           "Height:",-1, 162, 74, 37, 8
+        LTEXT           "Form_Name",TXT_FORMNAME, 198, 102, 64, 8
+        LTEXT           "Form_Width",TXT_FORMWIDTH, 198, 88, 64, 8
+        LTEXT           "Form_Height",TXT_FORMHEIGHT, 198, 74, 64, 8
+        ICON            ICO_PRINTPREV,1713, 198, 138, 21, 16, WS_GROUP
+        DEFPUSHBUTTON   "Print...", DID_OK,    7, 5, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 53, 5, 40, 14
+        PUSHBUTTON      "Help",   DID_HELP,   99, 5, 40, 14
+        AUTOCHECKBOX    "Outline only", ID_PREVOUTLINE, 163, 42, 84, 10
+        AUTOCHECKBOX    "Fill page out",ID_PRNSTRETCH,163, 29, 84, 10
+        GROUPBOX        "Draft printing", ID_GRPDRAFT, 156, 26, 112, 38
+    END
+END
+
+DLGTEMPLATE ID_PREVL LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Print Preview", ID_PREVL, 39, 12, 251, 191, FS_SYSMODAL | 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_PREVWND, 13, 94, 195, 87, "LayerClass", 
+                        WS_GROUP | WS_VISIBLE
+        GROUPBOX        "Preview", ID_PREVGRP, 6, 87, 209, 103
+        GROUPBOX        "Current form", GRP_CURFORM, 6, 25, 112, 56
+        LTEXT           "Name:", -1, 12, 60, 31, 8
+        LTEXT           "Width:", -1, 12, 46, 29, 8
+        LTEXT           "Height:", -1, 12, 32, 37, 8
+        LTEXT           "Form_Name", TXT_FORMNAME, 48, 60, 64, 8
+        LTEXT           "Form_Width", TXT_FORMWIDTH, 48, 46, 64, 8
+        LTEXT           "Form_Height", TXT_FORMHEIGHT, 48, 32, 64, 8
+        ICON            ICO_PRINTPREV, 1713, 221, 158, 21, 16, WS_GROUP
+        AUTOCHECKBOX    "Outline only", ID_PREVOUTLINE, 137, 49, 84, 10
+        AUTOCHECKBOX    "Fill page out",ID_PRNSTRETCH,137, 34, 84, 10
+        GROUPBOX        "Draft printing", ID_GRPDRAFT, 122, 25, 94, 56
+        DEFPUSHBUTTON   "Print...", DID_OK, 7, 5, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 53, 5, 40, 14
+        PUSHBUTTON      "Help", DID_HELP, 99, 5, 40, 14
+    END
+END
+
+DLGTEMPLATE ID_SPLINE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Spline / PolyLine Object", ID_SPLINE, 123, 143, 174, 98, 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        DEFPUSHBUTTON   "OK",     DID_OK, 4, 4, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 57, 4, 40, 14
+        PUSHBUTTON      "Help",   DID_HELP, 110, 4, 40, 14
+        GROUPBOX        "Type", -1, 4, 53, 80, 40
+        AUTORADIOBUTTON "Polyline",ID_SPLINELINE, 12, 72, 60, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Polyfillet",ID_SPLINEFILLET, 12, 62, 53, 10, WS_TABSTOP
+        GROUPBOX        "Options", ID_SPLINEGRP, 89, 53, 80, 40
+        AUTORADIOBUTTON "Default", ID_SPLINEDEF, 98, 72, 55, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Close",   ID_SPLINECLOSE, 98, 62, 58, 10, WS_TABSTOP
+        GROUPBOX        "Layer", -1, 4, 22, 165, 29
+        CONTROL         "", ID_SPLINELAYER, 62, 29, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+    END
+END
+
+DLGTEMPLATE IDB_SAVESELIMG LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Export Selection as.....", IDB_SAVESELIMG, 45, 62, 293, 117, 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        GROUPBOX        "Bitmap export format", ID_EXPGROUP, 4, 21, 200, 94
+        AUTORADIOBUTTON "BMP - OS/2 Warp bitmap", ID_RADOS2, 10, 95, 180, 10, 
+                        WS_TABSTOP
+        AUTORADIOBUTTON "BMP - MS -Windows bitmap", ID_RADWIN, 10, 83, 180, 
+                        10, WS_TABSTOP
+        AUTORADIOBUTTON "PCX - ZSoft PC Paintbrush", ID_RADPCX, 10, 71, 180, 
+                        10, WS_TABSTOP
+        AUTORADIOBUTTON "GIF - Compuserve interchange format", ID_RADGIF, 10, 
+                        59, 180, 10, WS_TABSTOP
+        AUTORADIOBUTTON "TIFF - Taged Image File Format", ID_RADTIF, 10, 47, 
+                        171, 10, WS_TABSTOP
+        AUTORADIOBUTTON "TGA - True Vision Targa/Vista", ID_RADTGA, 10, 35, 
+                        151, 10, WS_TABSTOP
+        AUTORADIOBUTTON "JPEG - The Independent JPEG Group's",ID_RADJPG, 10, 23, 
+                        191, 10, WS_TABSTOP
+        GROUPBOX        "Reduce colors", ID_CLRGROUP, 207, 21, 82, 94
+        AUTORADIOBUTTON "True color", ID_RADTRUE, 215, 95, 63, 10, 
+                        WS_TABSTOP
+        AUTORADIOBUTTON "256 colors", ID_RAD256, 215, 83, 62, 10, WS_TABSTOP
+        AUTORADIOBUTTON "64 colors", ID_RAD64, 215, 71, 58, 10, WS_TABSTOP
+        AUTORADIOBUTTON "16 colors", ID_RAD16, 215, 59, 59, 10, WS_TABSTOP
+        PUSHBUTTON      "OK", DID_OK, 3, 2, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 49, 2, 40, 14
+        PUSHBUTTON      "Help", DID_HELP, 95, 2, 40, 14
+    END
+END
+
+DLGTEMPLATE IDB_SAVESEL LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Export Selection as.....", IDB_SAVESEL, 63, 50, 340, 156, 
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        GROUPBOX        "Bitmap export format", ID_EXPGROUP, 10, 60, 200, 94
+        AUTORADIOBUTTON "BMP - OS/2 Warp bitmap", ID_RADOS2, 20, 134, 180, 
+                        10, WS_TABSTOP
+        AUTORADIOBUTTON "BMP - MS -Windows bitmap", ID_RADWIN, 20, 122, 180, 
+                        10, WS_TABSTOP
+        AUTORADIOBUTTON "PCX - ZSoft PC Paintbrush", ID_RADPCX, 20, 110, 180, 
+                        10, WS_TABSTOP
+        AUTORADIOBUTTON "GIF - Compuserve interchange format", ID_RADGIF, 20, 
+                        98, 180, 10, WS_TABSTOP
+        AUTORADIOBUTTON "TIFF - Taged Image File Format", ID_RADTIF, 20, 86, 
+                        171, 10, WS_TABSTOP
+        AUTORADIOBUTTON "TGA - True Vision Targa/Vista", ID_RADTGA, 20, 74, 
+                        151, 10, WS_TABSTOP
+        AUTORADIOBUTTON "JPEG - The Independent JPEG Group's", ID_RADJPG, 20, 62, 
+                        176, 10, WS_TABSTOP
+        GROUPBOX        "Reduce nr colors to...", ID_CLRGROUP, 11, 28, 321, 
+                        28
+        AUTORADIOBUTTON "True color", ID_RADTRUE, 28, 34, 63, 10, WS_TABSTOP
+        AUTORADIOBUTTON "256 colors", ID_RAD256, 97, 34, 70, 10, WS_TABSTOP
+        AUTORADIOBUTTON "64 colors", ID_RAD64, 173, 34, 65, 10, WS_TABSTOP
+        AUTORADIOBUTTON "16 colors", ID_RAD16, 244, 34, 69, 10, WS_TABSTOP
+        GROUPBOX        "Bitmap size in pixels", ID_GRPBBMSIZE, 219, 60, 111, 
+                        94
+        CONTROL         "", ID_SPINBMPCX, 265, 116, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPINBMPCY, 265, 95, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        LTEXT           "Width", -1, 228, 118, 31, 8
+        LTEXT           "Height", -1, 228, 96, 31, 8
+        PUSHBUTTON      "OK", DID_OK, 11, 7, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 57, 7, 40, 14
+        PUSHBUTTON      "Help", DID_HELP, 103, 7, 40, 14
+    END
+END
+
+DLGTEMPLATE ID_POLYPOINT LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Number of points", ID_POLYPOINT, 129, 72, 84, 41, WS_VISIBLE,
+            FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_NRPOINTS, 19, 17, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        DEFPUSHBUTTON   "Quit", DID_OK, 23, 1, 40, 12
+        LTEXT           "Max = 48", ID_TXTMAXPTS, 17, 32, 56, 8
+    END
+END
+
+
+DLGTEMPLATE ID_GRIDSIZE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Setup grid", ID_GRIDSIZE, 84, 85, 199, 83, WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        GROUPBOX        "Value's * 0.1 mm", ID_GRPGRID, 11, 27, 96, 50
+        CONTROL         "", ID_SPINGRIDX, 37, 49, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPINGRIDY, 37, 33, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        LTEXT           "X:", 105, 20, 51, 15, 8
+        LTEXT           "Y:", 106, 20, 34, 14, 8
+        CONTROL         "",ID_GRIDSPIN, 127, 32, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_MASTER | SPBS_SERVANT |
+                        SPBS_JUSTDEFAULT | WS_GROUP | WS_TABSTOP |
+                        WS_VISIBLE
+        LTEXT           "Display interval", 108, 119, 50, 74, 8
+        DEFPUSHBUTTON   "OK",DID_OK, 7, 6, 40, 14
+        PUSHBUTTON      "Cancel",DID_CANCEL, 50, 6, 40, 14
+    END
+END
+
+
+DLGTEMPLATE ID_ROTSNAP LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Rotate & Snap", ID_ROTSNAP, 109, 111, 128, 49, WS_VISIBLE,
+            FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_SPINROTSNAP, 46, 34, 34, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        LTEXT           "Snap on", -1, 5, 36, 40, 9
+        LTEXT           "degrees", -1, 85, 36, 43, 8
+        LTEXT           "000", ID_TXTDEGREES, 47, 20, 30, 8
+        LTEXT           "Degrees", -1, 5, 20, 37, 8
+        PUSHBUTTON      "Quit", DID_CANCEL, 41, 2, 40, 14
+    END
+END
+
+DLGTEMPLATE ID_FRMDIALOG LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Define form size",ID_FRMDIALOG, 30, 61, 340, 105, WS_VISIBLE,
+            FCF_TITLEBAR
+    BEGIN
+        DEFPUSHBUTTON   "~OK",          DID_OK, 12, 6, 40, 14
+        PUSHBUTTON      "~Cancel",      DID_CANCEL, 58, 6, 40, 14
+        AUTORADIOBUTTON "~Portrait",    ID_RADPORTRAIT, 259, 61, 58, 10,  WS_TABSTOP
+        AUTORADIOBUTTON "~Landscape",   ID_RADLANDSCAPE, 259, 47, 58, 10, WS_TABSTOP
+        GROUPBOX        "Orientation", ID_GRPFORM, 251, 39, 80, 44
+        PUSHBUTTON      "Help", DID_HELP, 104, 6, 40, 14
+        AUTOCHECKBOX    "Make selection program default.", ID_CHKASDEFAULT,180, 8, 153,10
+    END
+END
+
+DLGTEMPLATE PIC_FILEDLG LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "PIC file attributes", PIC_FILEDLG, 73, 39, 275, 128, WS_VISIBLE,
+            FCF_TITLEBAR
+    BEGIN
+        LTEXT           "Header:", -1, 12, 96, 41, 8
+        LTEXT           "This font", ID_LTFONTNAME, 85, 96, 115, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0x00000000L
+        PUSHBUTTON      "Change", ID_PBFONT, 221, 93, 40, 14
+        LTEXT           "Regular text:", -1, 12, 74, 59, 8
+        LTEXT           "This font", ID_LTFONTNAME1, 87, 74, 125, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0x00000000L
+        PUSHBUTTON      "Change", ID_PBFONT1, 221, 71, 40, 14
+        LTEXT           "Filling pattern:", -1, 98, 53, 67, 8
+        CONTROL         "", ID_DRPFILLING, 183, 19, 80, 43, WC_COMBOBOX,
+                        CBS_DROPDOWNLIST | WS_GROUP | WS_TABSTOP |
+                        WS_VISIBLE
+        LTEXT           "Linetype:", -1, 98, 36, 62, 8
+        CONTROL         "", ID_DRPLINETYPE, 183, 8, 80, 38, WC_COMBOBOX,
+                        CBS_DROPDOWNLIST | WS_GROUP | WS_TABSTOP |
+                        WS_VISIBLE
+        DEFPUSHBUTTON   "OK", DID_OK, 8, 4, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 58, 4, 40, 14
+        PUSHBUTTON      "Help", DID_HELP, 108, 4, 40, 14
+        GROUPBOX        "", ID_PICGRP1, 74, 92, 144, 20
+        GROUPBOX        "", ID_PICGRP2, 74, 70, 144, 20
+    END
+END
+
+/*
+** Dialog for changing the selected text.
+*/
+DLGTEMPLATE DLG_CHTXT LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Change text", DLG_CHTXT, 70, 130, 265, 34, FS_MOUSEALIGN | FS_SYSMODAL | WS_VISIBLE
+    BEGIN
+        ENTRYFIELD      "", ID_CHTXT, 3, 21, 259, 8, ES_MARGIN
+        DEFPUSHBUTTON   "OK", DID_OK, 1, 2, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 47, 2, 40, 14
+    END
+END
+
+/*
+** Fountain fill dialog and it's menu's.
+*/
+DLGTEMPLATE ID_DLGFOUNTAIN PRELOAD MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Fountain fill", ID_DLGFOUNTAIN, 32, 42, 325, 118, FS_SYSMODAL |
+            WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_FOUNTAINWND, 3, 28, 110, 83, "FOUNTAIN", 
+                        WS_GROUP | WS_VISIBLE
+        CONTROL         "", ID_SPINHORZ, 250, 94, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_MASTER | SPBS_SERVANT | 
+                        SPBS_JUSTDEFAULT | WS_GROUP | WS_TABSTOP | 
+                        WS_VISIBLE
+        CONTROL         "", ID_SPINVERT, 250, 77, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_MASTER | SPBS_SERVANT | 
+                        SPBS_JUSTDEFAULT | WS_GROUP | WS_TABSTOP | 
+                        WS_VISIBLE
+        LTEXT           "Horizontal", ID_STATTXTH, 200, 96, 47, 8
+        LTEXT           "Vertical", ID_STATTXTV, 200, 79, 36, 8
+        LTEXT           "%", 119, 301, 96, 13, 8
+        LTEXT           "%", 120, 301, 79, 13, 8
+        GROUPBOX        "Center Offset", ID_GRPCENTEROFF, 194, 74, 128, 42
+        AUTORADIOBUTTON "Circular", ID_RADCIR, 122, 95, 47, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Square", ID_RADSQR, 122, 85, 43, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Horz+Angle", ID_RADHORIZ, 122, 75, 62, 10, 
+                        WS_TABSTOP
+        AUTORADIOBUTTON "Vertical", ID_RADVERTICAL, 122, 65, 62, 10, 
+                        WS_TABSTOP
+        GROUPBOX        "Direction", ID_GRPDIRECTION, 117, 60, 75, 56
+        PUSHBUTTON      "", ID_PBTO, 264, 49, 34, 10, BS_NOPOINTERFOCUS
+        PUSHBUTTON      "", ID_PBFROM, 264, 34, 34, 11, BS_NOPOINTERFOCUS
+        GROUPBOX        "Colors", ID_GRCOLORS, 194, 28, 128, 42
+        LTEXT           "From", ID_TXTFROM, 225, 36, 28, 8
+        LTEXT           "To", ID_TXTFTO, 225, 51, 28, 8
+        CONTROL         "", ID_SPINANGLE, 127, 34, 48, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        GROUPBOX        "Angle", ID_GRPANGLE, 118, 28, 72, 30
+        PUSHBUTTON      "OK", DID_OK, 3, 6, 51, 11
+        PUSHBUTTON      "Cancel", DID_CANCEL, 58, 6, 51, 11
+    END
+END
+
+
+DLGTEMPLATE DLG_CIROBJECT LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Circular object", DLG_CIROBJECT,111, 78, 239, 90, WS_VISIBLE,
+            FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_SPNCIRLAYER, 70, 70, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPNSWEEP, 70, 58, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        CONTROL         "", ID_SPNSTART, 70, 46, 48, 12, WC_SPINBUTTON,
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER |
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP |
+                        WS_TABSTOP | WS_VISIBLE
+        AUTOCHECKBOX    "Closed circle", ID_CHKOPENCIR, 5, 35, 70, 10
+        AUTOCHECKBOX    "Circlular",     ID_CHKCIR,     5, 25, 70, 10
+        LTEXT           "Layer",       -1,  5, 72, 31, 8
+        LTEXT           "Sweep Angle", -1,  5, 60, 59, 8
+        LTEXT           "Start Angle", -1,  5, 48, 52, 8
+        DEFPUSHBUTTON   "OK",     DID_OK,      4, 4, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 50, 4, 40, 14
+        PUSHBUTTON      "Help",   DID_HELP,   96, 4, 40, 14
+        CONTROL         "", ID_CIRWIN,       138,21, 97, 65, "circleWnd", WS_GROUP |
+                        WS_VISIBLE
+    END
+END
+
+DLGTEMPLATE DLG_ARROWS LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Line ends", DLG_ARROWS, 157, 60, 131, 171, NOT FS_DLGBORDER | 
+            FS_BORDER | WS_VISIBLE, FCF_TITLEBAR
+            PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+    BEGIN
+        CONTROL         "", ID_ARROWWND, 71, 48, 56, 40, "ARROWPREVCLASS", WS_GROUP | WS_VISIBLE
+        CONTROL         "", ID_LINESTART, 8, 20, 20, 138, WC_VALUESET, 
+                        VS_TEXT | VS_BORDER | VS_ITEMBORDER | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+                        CTLDATA 8, 0, 11, 1
+        CONTROL         "", ID_LINEEND, 44, 20, 20, 138, WC_VALUESET, 
+                        VS_TEXT | VS_BORDER | VS_ITEMBORDER | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+                        CTLDATA 8, 0, 11, 1
+        LTEXT           "Start", -1, 9, 159, 27, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        LTEXT           "End", -1, 45, 159, 24, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        CONTROL         "", ID_SPINARROWSIZE, 71, 144, 56, 12, WC_SPINBUTTON, 
+                        SPBS_ALLCHARACTERS | SPBS_NUMERICONLY | SPBS_MASTER | 
+                        SPBS_SERVANT | SPBS_JUSTDEFAULT | WS_GROUP | 
+                        WS_TABSTOP | WS_VISIBLE
+        LTEXT           "Size 0.1 mm", -1, 72, 159, 55, 8
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Help", DID_HELP, 80, 4, 35, 12
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Default", DID_DEFAULT, 42, 4, 35, 12
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        PUSHBUTTON      "Close", DID_CANCEL, 4, 4, 35, 12
+                        PRESPARAMS PP_FONTNAMESIZE, "8.Helv"
+        LTEXT           "Preview", -1, 72, 112, 52, 8
+    END
+END
+
+DLGTEMPLATE DLG_BLOCKTEXT LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Edit column text", DLG_BLOCKTEXT, 101, 52, 299, 188, NOT FS_DLGBORDER | 
+            FS_SIZEBORDER | WS_VISIBLE, FCF_TITLEBAR | FCF_MINBUTTON | 
+            FCF_MAXBUTTON
+    BEGIN
+        MLE             "", ID_BTEXTMLE, 5, 22, 290, 163, MLS_WORDWRAP | MLS_HSCROLL | 
+                        MLS_VSCROLL | MLS_IGNORETAB  | WS_GROUP
+        PUSHBUTTON      "OK", DID_OK,          6, 2, 40, 13
+        PUSHBUTTON      "Cancel", DID_CANCEL, 50, 2, 40, 13
+        PUSHBUTTON      "Help",   DID_HELP,   94, 2, 40, 13
+    END
+END
+
+
+DLGTEMPLATE DLG_SHADING LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Shading....", DLG_SHADING, 117, 59, 170, 63, WS_VISIBLE, FCF_TITLEBAR
+    BEGIN
+        GROUPBOX        "Color", ID_GRPSHADECOLOR, 3, 19, 75, 40
+        PUSHBUTTON      "",      ID_BTNSHADECOLOR, 21, 30, 40, 14,BS_NOPOINTERFOCUS
+        AUTORADIOBUTTON "Normal",ID_RADSHADEMIN,   94, 41, 45, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Medium",ID_RADSHADEMED, 94, 31, 45, 10, WS_TABSTOP
+        AUTORADIOBUTTON "Large", ID_RADSHADELARGE, 94, 21, 39, 10, WS_TABSTOP
+        GROUPBOX        "Depth", ID_GRPSHADEDEPTH, 82, 19, 85, 40
+        PUSHBUTTON      "OK",    DID_OK, 2, 3, 40, 12
+        PUSHBUTTON      "Cancel",DID_CANCEL, 47, 3, 40, 12
+    END
+END
+
+
+
+MENU IDM_FOUNTAINCOLOR
+BEGIN
+MENUITEM "", IDM_CLR1 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR2 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR3 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR4 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR5 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR6 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR7 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR8 , MIS_OWNERDRAW
+MENUITEM "", IDM_CLR9 , MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR10, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR11, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR12, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR13, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR14, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR15, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR16, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR17, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR18, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR19, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR20, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR21, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR22, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR23, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR24, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR25, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR26, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR27, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR28, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR29, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR30, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR31, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR32, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR33, MIS_OWNERDRAW | MIS_BREAKSEPARATOR
+MENUITEM "", IDM_CLR34, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR35, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR36, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR37, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR38, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR39, MIS_OWNERDRAW
+MENUITEM "", IDM_CLR40, MIS_OWNERDRAW
+END
+
+
+STRINGTABLE PRELOAD
+BEGIN
+   IDS_HELPLIBRARYNAME   "DRAWIT.HLP"
+   IDS_CANNOTLOADSTRING  "Failed to load string."
+   IDS_HELPLOADERROR     "Failed to load help manager."
+   IDS_HELPDISPLAYERROR  "Failed to display help panel."
+   IDS_HELPWINDOWTITLE   "DrawIt."
+   IDS_HELPGENERALERROR  "Failed to display general help panel."
+   IDS_HELPKEYSERROR     "Failed to display key help panel."
+   IDS_HELPINDEXERROR    "Failed to display index help panel."
+   IDS_APPNAME           "DrawIt"
+   IDS_FILEOPENEXT       "*.JSP"
+   IDS_UNTITLED          "Untitled"
+   IDS_TITLEBARSEPARATOR " - "
+   IDS_UNKNOWNMSG        "Unknown Error encounted in file %s line %ld"
+   IDS_DRAWING           "Drawing"
+   IDS_WAIT              "Idle"
+   IDS_PRINTING          "Printing"
+   IDS_SAVESELIMGAS      "Save selected image as...."
+   IDS_IMAGENOTINGROUP   "Bitmap Image or Metafile not allowed in a group."
+   STRID_PICINVALID      "Not a valid Lotus 123 pic file"
+   STRID_NOFILE          "Cannot open requested file"
+   IDS_ASKFORSAVE        "Drawing has changed, Do you want to save it ?"
+   IDS_WARNING           "Warning!"
+   IDS_CANNOTOPENFILE    "Cannot open requested file"
+   IDS_FILEOPENERROR     "File open error"
+   IDS_WRONGFORMAT       "Wrong file format"
+   IDS_NOTADRAWITFILE    "Error not a drawit file"
+   IDS_SAVING            "Saving"
+   IDS_LOADING           "Loading"
+   IDS_WRONGJSPFORMAT    "File contains wrong JSP format or file is made with an old DrawIt version"
+
+IDM_FILE     "Insert a new drawing from disk"
+IDM_FILN     "Create a new drawing"
+IDM_SAVE     "Save the current drawing"
+IDM_SAVA     "Save the current drawing with a new name"
+IDM_METAEXP  "Save the current drawing as an OS/2 metafile"
+IDM_BITMAPEXP "Save the complete drawing as bitmap"
+IDM_BMP      "Load a bitmap file"
+IDM_METAFILE       "Load a OS/2 metafile"
+IDM_EXPSELMETA "Save the selected objects/area as OS/2 metafile"
+IDM_OTHERFORM  "Save the selected objects/area as bitmap"
+IDM_PRINTAS    "Print the current drawing"
+IDM_PRINTPREVIEW "Print and print preview"
+IDM_CUT         "Cut a bitmap or OS/2 metafile and put on clipboard"
+IDM_COPY        "Copy a selected bitmap or metafile to the clipboard"
+IDM_PASTE       "Paste a bitmap or metafile from the clipboard"
+IDM_CLEAR       "Delete the selected object"
+IDM_GROUP       "Put the selected objects in a group"
+IDM_UNGROUP     "Seperate the objects in a group"
+IDM_DOT         "Setup the linetype"
+IDM_LNSIZE      "Set geometric linewidth"
+IDM_LNJOIN      "Set the linejoin"
+IDM_CLROUTL     "Color palette defines outline color"
+IDM_CST         "Filling patterns"
+IDM_GRD         "Setup gradient fill"
+IDM_FTAIN       "Setup fountain fill"
+IDM_REFRESH     "Redraw the current drawing on screen"
+IDM_FNT         "Set the current font to use for new text"
+IDM_SELTEXT     "Detail on selected text"
+IDM_EDITTEXT    "Edit the selected text"
+IDM_TXTCIRC     "Make text circular"
+IDM_CHARBOX     "Make the charbox square"
+IDM_FLIPH       "Flip the text over the horizontal axis"
+IDM_FLIPV       "Flip the text over the vertical axis"
+IDM_SELBMP      "Details of selected image"
+IDM_FLIPHIMG    "Flip the image over horizontal axis"
+IDM_FLIPVIMG    "Flip the image over vertical axis"
+IDM_ROTATIONUP   "Rotate color by increasing the colorvalue's"
+IDM_ROTATIONDOWN "Rotate color by decreasing the colorvalue's"
+IDM_CROP        "Cut out the part of interest of the selected image"
+IDM_RESTASPECT  "Restore the original aspect ratio of the selected image"
+IDM_RESTORESIZE "Restore the original size of the selected image"
+IDM_GRAYSCALE   "Make it a grayscaled image"
+IDM_BLACKWHITE  "Make it a black and white image"
+IDM_UNDOPALETTE "Restore original palette of selected image"
+IDM_IMGINVERT   "Invert the colors of the selected image"
+IDM_IMGBRIGHT   "Increase the brightness of the image"
+IDM_CIRBMP      "Put the image in a circular frame"
+IDM_NORBMP      "Make image square"
+IDM_IMGOTHERFORMATS "Save the selected image to disk"
+IDM_FINDCOLOR   "Find the color under the mouse pointer"
+IDM_SPECLINES   "fanshaped lines"
+IDM_REGPOLYSTAR "Regular polystart with definable nr of points"
+IDM_HELPINDEX   "Brings up the helpsystem and shows the index list"
+IDM_HELPUSINGHELP "How to use the help system?"
+IDM_HELPPRODINFO "Show version number and author of this product"
+IDM_SUPPRESSFILL "Suppress gradient fill of an obj to speedup drawing"
+IDM_FORMSIZE  "Setup the formsize"
+IDM_LOTUSPIC  "Import a Lotus 123 chart"
+IDM_FREESTYLELINE "Freestyle polylines"
+IDM_FREESTYLENORM "Spline, adds points when mouse pressed"
+IDM_FREESTYLEFINE "Spline, adds points when mouse pressed (high rate)"
+IDM_COLORCOPY  "Copy color palette to internal clipboard"
+IDM_COLORPASTE "Paste color palette into selected image"
+IDM_SELTYPE    "Define the way of selecting an object"
+IDM_ONAREA     "Make complete object area the selection area"
+IDM_ONLINE     "Make lines of the obj the selection area"
+IDM_SETCLIPPATH "Makes a clipping path of selected polyline"
+IDM_DELCLIPPATH "Removes the clippath from the image"
+IDM_IMGCLIPPATH "Set or remove the clippath from the selected image"
+IDM_BTEXTSPACE  "Set extra line spacing"
+IDM_BTEXTSPACESINGLE "Normal line spacing"
+IDM_BTEXTSPACEHALF   "Add half line space"
+IDM_BTEXTSPACEDOUBLE "Add one extra line space"
+IDM_ATTR "Copy or paste attributes"
+IDM_COPYATTR2OBJ "Copy all applic attributes into selected object(s)"
+IDM_COPYATTR  "Copies all object attributes into applic context"
+END
+

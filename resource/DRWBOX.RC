@@ -1,0 +1,30 @@
+#define INCL_WIN
+#include <os2.h>
+#include "sheet.h"
+
+MENU ID_RESOURCE
+BEGIN
+MENUITEM "Box", IDM_BOX
+END
+
+
+
+DLGTEMPLATE ID_BOXDETAIL LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Box Details", ID_BOXDETAIL, 103, 90, 227, 106, WS_VISIBLE, 
+            FCF_TITLEBAR
+    BEGIN
+        CONTROL         "", ID_BOXWND, 4, 33, 94, 68, "BOXCLASS", WS_GROUP | 
+                        WS_VISIBLE
+        GROUPBOX        "", ID_GRPROUNDING, 104, 70, 116, 35
+        LTEXT           "Rounding", ID_TXTHORIZ, 112, 81, 47, 8
+        SPINBUTTON      ID_SPINROUND, 166, 80, 48, 12, SPBS_MASTER | 
+                        WS_GROUP
+        SPINBUTTON      ID_SPINLAYER, 166, 45, 48, 12, SPBS_MASTER | 
+                        WS_GROUP
+        LTEXT           "Layer", ID_TXTLAYER, 112, 45, 36, 8
+        GROUPBOX        "", ID_GRPLAYER, 104, 33, 116, 35
+        DEFPUSHBUTTON   "OK", DID_OK, 6, 6, 40, 14
+        PUSHBUTTON      "Cancel", DID_CANCEL, 52, 6, 40, 14
+    END
+END
